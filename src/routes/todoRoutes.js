@@ -6,6 +6,7 @@ const {
 	deleteTodoController,
 	getTodoByIdController,
 } = require("../controllers/todoControllers");
+const authMiddleware = require("../middlewares/authMiddleWare");
 
 const router = express.Router();
 

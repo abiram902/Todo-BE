@@ -7,16 +7,17 @@ const {
 	deleteUserById,
 	loginUser,
 } = require("../controllers/userControllers");
+const authMiddleWare = require("../middlewares/authMiddleWare");
 
 const router = express.Router();
 
-router.get("/", getAllUsers);
+router.get("/", authMiddleWare, getAllUsers);
 
-router.get("/:id", getUserById);
+router.get("/:id", authMiddleWare, getUserById);
 
-router.put("/:id", updateUserById);
+router.put("/:id", authMiddleWare, updateUserById);
 
-router.delete("/:id", deleteUserById);
+router.delete("/:id", authMiddleWare, deleteUserById);
 
 router.post("/", signupUser);
 

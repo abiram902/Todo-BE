@@ -1,5 +1,6 @@
 const User = require("../model/User");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
 const signupUser = async (req, res) => {
 	try {
@@ -12,13 +13,26 @@ const signupUser = async (req, res) => {
 			phone,
 		});
 
+		const token = await jwt.sign(
+			{
+				firstName: user.firstName,
+				lastName: user.lastName,
+				email: user.email,
+				id: user._id,
+				phone: user.phone,
+			},
+			process.env.JWT_SECRET,
+			{},
+		);
+
 		const salt = await bcrypt.genSalt(10);
 		const hash = await bcrypt.hash(password, salt);
 		user.password = hash;
+		user.token = token;
 
 		await user.save();
 
-		res.status(201).json({ message: "User created successfully" });
+		res.status(201).json({ message: "User created successfully", token });
 	} catch (error) {
 		res.status(500).json({ message: error });
 	}
