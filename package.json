@@ -1,0 +1,15 @@
+{
+	"name": "todo-be",
+	"version": "1.0.0",
+	"description": "BE for a TODO app",
+	"main": "server.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"server": "node ./src/server.js"
+	},
+	"author": "Abiram902",
+	"license": "ISC",
+	"dependencies": {
+		"express": "^4.18.2"
+	}
+}
