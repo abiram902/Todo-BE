@@ -20,6 +20,21 @@ const todoSchema = new Schema(
 			type: String,
 			default: Date.now,
 		},
+		createdBy: {
+			type: Schema.Types.ObjectId,
+			ref: "User",
+			required: false,
+		},
+		movedBy: {
+			type: Schema.Types.ObjectId,
+			ref: "User",
+			required: false,
+		},
+		assignedTo: {
+			type: [Schema.Types.ObjectId],
+			ref: "User",
+			required: false,
+		},
 	},
 	{ timestamps: true },
 );

@@ -2,7 +2,9 @@ const Todo = require("../model/Todo");
 
 const getAllTodoController = async (req, res) => {
 	try {
-		const todos = await Todo.find();
+		const todos = await Todo.find()
+			.populate("createdBy")
+			.populate("assignedTo");
 		res.status(200).json(todos);
 	} catch (error) {
 		res.status(500).json({ error: error });
@@ -20,12 +22,14 @@ const getTodoByIdController = async (req, res) => {
 
 const createTodoController = async (req, res) => {
 	try {
-		const { title, status, description, date } = req.body;
+		const { title, status, description, date, user, assignedTo } = req.body;
 		const todo = new Todo({
 			title,
 			status,
 			description,
 			date,
+			createdBy: user.id,
+			assignedTo: assignedTo || [],
 		});
 		await todo.save();
 		res.status(201).json(todo);
