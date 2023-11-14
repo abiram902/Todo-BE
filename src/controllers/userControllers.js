@@ -1,6 +1,7 @@
 const User = require("../model/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const sendMail = require("../services/mailService");
 
 const signupUser = async (req, res) => {
 	try {
@@ -31,6 +32,12 @@ const signupUser = async (req, res) => {
 		user.token = token;
 
 		await user.save();
+
+		await sendMail(
+			user.email,
+			"Your New Account",
+			`Hi ${user.firstName}, Your new account has been created successfully!`,
+		);
 
 		res.status(201).json({ message: "User created successfully", token });
 	} catch (error) {
@@ -82,6 +89,19 @@ const loginUser = async (req, res) => {
 		const matched = await bcrypt.compare(password, user.password);
 
 		if (matched) {
+			const token = await jwt.sign(
+				{
+					firstName: user.firstName,
+					lastName: user.lastName,
+					email: user.email,
+					id: user._id,
+					phone: user.phone,
+				},
+				process.env.JWT_SECRET,
+				{},
+			);
+			user.token = token;
+			await user.save();
 			res.status(200).json({
 				firstName: user.firstName,
 				lastName: user.lastName,
